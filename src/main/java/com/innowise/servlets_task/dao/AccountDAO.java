@@ -61,7 +61,7 @@ public class AccountDAO {
       insertStatement.setString(3, employee.getDepartment().getDepartmentName());
       insertStatement.setString(4, employee.getPassword());
       insertStatement.setDouble(5, employee.getSalary());
-      insertStatement.setString(6, employee.getRank().getRankTitle());
+      insertStatement.setString(6, employee.getRank().toString());
 
       int rowsInserted = insertStatement.executeUpdate();
       if (rowsInserted > 0) {
@@ -139,7 +139,7 @@ public class AccountDAO {
 
       updateStatement.setString(4, employee.getPassword());
       updateStatement.setDouble(5, employee.getSalary());
-      updateStatement.setString(6, employee.getRank().getRankTitle());
+      updateStatement.setString(6, employee.getRank().name());
 
       updateStatement.setInt(7, employee.getId());
 

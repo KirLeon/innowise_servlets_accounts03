@@ -22,12 +22,13 @@ public class AccountService {
     if (instance == null) {
       synchronized (AccountService.class) {
         instance = accountService;
-        synchronized (AccountService.class) {
+        if (instance == null) {
           accountService = new AccountService();
           instance = accountService;
         }
       }
     }
+
     return instance;
   }
 
@@ -74,7 +75,8 @@ public class AccountService {
 
     if (accountToUpdate != null) {
       //logging
-      return AccountMapper.mapper.entityToDto((accountDAO.updateAccount(accountToUpdate)));
+      accountToUpdate = accountDAO.updateAccount(AccountMapper.mapper.dtoToEntity(updateRequest));
+      return AccountMapper.mapper.entityToDto(accountToUpdate);
     }
 
     //logging
@@ -99,7 +101,6 @@ public class AccountService {
   }
 
   public boolean checkUserPassword(int id, String checkPassword) {
-
     String actualPassword = getAccountByID(id).getPassword();
     return BCrypt.checkpw(checkPassword, actualPassword);
   }

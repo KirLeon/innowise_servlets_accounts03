@@ -1,8 +1,9 @@
 package com.innowise.servlets_task.controller.commands.impl;
 
 import com.innowise.servlets_task.controller.commands.CommandClass;
-import com.innowise.servlets_task.dto.DTO;
+import com.innowise.servlets_task.dto.AccountDTO;
 import com.innowise.servlets_task.service.AccountService;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,5 +16,9 @@ public class AccountListExecutableCommand extends CommandClass {
   @Override
   public void executeGet(HttpServletRequest request, HttpServletResponse response) {
 
+    List<AccountDTO> accountDTOList = accountService.getAllAccounts();
+    String responseMessage = accountDTOList.toString();
+
+    printResponseJSON(defaultResponseCode, responseMessage, response);
   }
 }

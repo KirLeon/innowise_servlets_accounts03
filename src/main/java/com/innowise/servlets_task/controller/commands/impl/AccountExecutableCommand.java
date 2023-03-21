@@ -65,7 +65,7 @@ public class AccountExecutableCommand extends CommandClass {
   @Override
   public AccountDTO parseFromJson(HttpServletRequest request) {
 
-    AccountDTO accountDTO;
+    AccountDTO accountDTO = null;
 
     try (BufferedReader readerJSON = request.getReader()) {
 
@@ -77,11 +77,9 @@ public class AccountExecutableCommand extends CommandClass {
 
       ObjectMapper objectMapper = new ObjectMapper();
       accountDTO = objectMapper.readValue(bufferJSON.toString(), AccountDTO.class);
-    } catch (
-        IOException e) {
-      throw new RuntimeException(e);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
-
     return accountDTO;
   }
 

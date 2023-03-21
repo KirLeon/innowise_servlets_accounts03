@@ -3,20 +3,20 @@ package com.innowise.servlets_task.entity;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum Rank {
-  EMPLOYEE("Employee"), MANAGER("Manager"), ADMINISTRATOR("Administrator");
+  EMPLOYEE(1), MANAGER(2), ADMINISTRATOR(3);
 
-  private String rankTitle;
+  private final int rankAccessLevel;
 
-  Rank(String rankTitle) {
-    this.rankTitle = rankTitle;
+  Rank(int rankAccessLevel) {
+    this.rankAccessLevel = rankAccessLevel;
   }
 
-  public String getRankTitle() {
-    return rankTitle;
+  public int getRankAccessLevel() {
+    return rankAccessLevel;
   }
 
   @JsonCreator
-  public static Rank fromString(String rankTitle){
+  public static Rank fromString(String rankTitle) {
     return valueOf(rankTitle.toUpperCase());
   }
 }
