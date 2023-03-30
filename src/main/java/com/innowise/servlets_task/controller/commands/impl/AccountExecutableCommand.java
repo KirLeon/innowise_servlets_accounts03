@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.innowise.servlets_task.controller.commands.CommandClass;
 import com.innowise.servlets_task.dto.AccountDTO;
 import com.innowise.servlets_task.service.AccountService;
+import com.innowise.servlets_task.service.LoginService;
 import java.io.BufferedReader;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
@@ -11,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 public class AccountExecutableCommand extends CommandClass {
 
-  public AccountExecutableCommand(AccountService accountService) {
-    super(accountService);
+  public AccountExecutableCommand(AccountService accountService, LoginService loginService) {
+    super(accountService, loginService);
   }
 
   @Override

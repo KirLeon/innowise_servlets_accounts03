@@ -51,7 +51,7 @@ public class AccountDAO {
 
     try (Connection connection = getNewConnection()) {
 
-      String sqlInsert = "INSERT INTO employees (first_name, last_name, department,"
+      String sqlInsert = "INSERT INTO accounts (first_name, last_name, department,"
           + " password, salary, emp_rank) VALUES (?, ?, ?, ?, ?, ?)";
 
       PreparedStatement insertStatement = connection.prepareStatement(sqlInsert);
@@ -79,7 +79,7 @@ public class AccountDAO {
 
     try (Connection connection = getNewConnection()) {
 
-      String sqlSelectOne = "SELECT * from employees where id = ?";
+      String sqlSelectOne = "SELECT * from accounts where id = ?";
       PreparedStatement selectOneStatement = connection.prepareStatement(sqlSelectOne);
 
       selectOneStatement.setInt(1, id);
@@ -101,7 +101,7 @@ public class AccountDAO {
   public List<Account> selectAllEmployees() {
     try (Connection connection = getNewConnection()) {
 
-      String sqlSelectAll = "SELECT * from employees";
+      String sqlSelectAll = "SELECT * from accounts";
       Statement statement = connection.createStatement();
 
       ResultSet resultSet = statement.executeQuery(sqlSelectAll);
@@ -128,7 +128,7 @@ public class AccountDAO {
 
     try (Connection connection = getNewConnection()) {
 
-      String sqlUpdate = "UPDATE employees SET first_name = ?, last_name = ?, department = ?,"
+      String sqlUpdate = "UPDATE accounts SET first_name = ?, last_name = ?, department = ?,"
           + " password = ?, salary = ?, emp_rank = ? WHERE id = ?";
 
       PreparedStatement updateStatement = connection.prepareStatement(sqlUpdate);
@@ -158,7 +158,7 @@ public class AccountDAO {
   public Account deleteEmployee(int id) {
     try (Connection connection = getNewConnection()) {
 
-      String sqlDelete = "DELETE FROM employees where id = ?";
+      String sqlDelete = "DELETE FROM accounts where id = ?";
       PreparedStatement deleteStatement = connection.prepareStatement(sqlDelete);
 
       Account deletedEmployee = selectAccount(id);

@@ -13,8 +13,11 @@ public class AccountService {
 
   private static AccountDAO accountDAO;
 
-  public AccountService() {
+  private static String salt;
+
+  private AccountService() {
     accountDAO = AccountDAO.getInstance();
+    salt = BCrypt.gensalt(12);
   }
 
   public static AccountService getServiceInstance() {
@@ -96,20 +99,38 @@ public class AccountService {
   }
 
   public String hashPassword(String password) {
-    String salt = BCrypt.gensalt(14);
     return BCrypt.hashpw(password, salt);
   }
 
-  public boolean checkUserPassword(int id, String checkPassword) {
-    String actualPassword = getAccountByID(id).getPassword();
-    return BCrypt.checkpw(checkPassword, actualPassword);
+  public boolean checkExistingUser(int id, String checkPassword) {
+    AccountDTO userAccount = getAccountByID(id);
+    if (userAccount != null) {
+      String actualPassword = getAccountByID(id).getPassword();
+      if(BCrypt.checkpw(checkPassword, actualPassword))
+      return BCrypt.checkpw(checkPassword, actualPassword);
+    }
+    return false;
   }
 
-  public Account login(int id, String password) {
-    Account account = accountDAO.selectAccount(id);
-    if (account != null) {
-      return checkUserPassword(id, password) ? account : null;
+//  public Account login(int id, String password) {
+//    Account account = accountDAO.selectAccount(id);
+//    if (account != null) {
+//      return checkUserPassword(id, password) ? account : null;
+//    }
+//    return null;
+//  }
+
+  public int checkUserRank(Object userId, Object password) {
+
+    if (userId == null || password == null ||
+        userId.toString().isEmpty() || password.toString().isEmpty()) {
+      return 0;
     }
-    return null;
+
+    int id = Integer.parseInt(userId.toString());
+    AccountDTO userAccount = getAccountByID(id);
+    return checkExistingUser(id, password.toString()) ? userAccount.getRank().ordinal() + 1 : 0;
   }
+
+
 }

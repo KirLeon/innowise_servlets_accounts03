@@ -16,7 +16,7 @@ public class ResourceNotFoundExecutableCommand extends CommandClass {
 
 
   public ResourceNotFoundExecutableCommand() {
-    super(null);
+    super(null, null);
   }
 
   @Override
