@@ -3,15 +3,11 @@ package com.innowise.servlets_task.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.innowise.servlets_task.entity.Departments;
 import com.innowise.servlets_task.entity.Rank;
-import javax.annotation.processing.Generated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @Data
 @Builder

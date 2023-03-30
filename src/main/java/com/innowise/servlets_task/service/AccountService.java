@@ -13,8 +13,11 @@ public class AccountService {
 
   private static AccountDAO accountDAO;
 
-  public AccountService() {
+  private static String salt;
+
+  private AccountService() {
     accountDAO = AccountDAO.getInstance();
+    salt = BCrypt.gensalt(12);
   }
 
   public static AccountService getServiceInstance() {
@@ -22,12 +25,13 @@ public class AccountService {
     if (instance == null) {
       synchronized (AccountService.class) {
         instance = accountService;
-        synchronized (AccountService.class) {
+        if (instance == null) {
           accountService = new AccountService();
           instance = accountService;
         }
       }
     }
+
     return instance;
   }
 
@@ -74,7 +78,8 @@ public class AccountService {
 
     if (accountToUpdate != null) {
       //logging
-      return AccountMapper.mapper.entityToDto((accountDAO.updateAccount(accountToUpdate)));
+      accountToUpdate = accountDAO.updateAccount(AccountMapper.mapper.dtoToEntity(updateRequest));
+      return AccountMapper.mapper.entityToDto(accountToUpdate);
     }
 
     //logging
@@ -94,21 +99,13 @@ public class AccountService {
   }
 
   public String hashPassword(String password) {
-    String salt = BCrypt.gensalt(14);
     return BCrypt.hashpw(password, salt);
   }
 
-  public boolean checkUserPassword(int id, String checkPassword) {
-
-    String actualPassword = getAccountByID(id).getPassword();
-    return BCrypt.checkpw(checkPassword, actualPassword);
+  public boolean checkExistingUser(int id, String checkPassword) {
+    AccountDTO userAccount = getAccountByID(id);
+    return userAccount != null && BCrypt.checkpw(checkPassword, getAccountByID(id).getPassword());
   }
 
-  public Account login(int id, String password) {
-    Account account = accountDAO.selectAccount(id);
-    if (account != null) {
-      return checkUserPassword(id, password) ? account : null;
-    }
-    return null;
-  }
+
 }

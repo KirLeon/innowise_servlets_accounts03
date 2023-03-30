@@ -15,6 +15,14 @@ import java.util.List;
 public class AccountDAO {
 
   private static volatile AccountDAO accountDAOInstance;
+  private final String SELECT_STATEMENT = "SELECT * from accounts where id = ?";
+  private final String SELECT_ALL_STATEMENT = "SELECT * from accounts";
+  private final String INSERT_STATEMENT = "INSERT INTO accounts (first_name, last_name, department,"
+      + " password, salary, emp_rank) VALUES (?, ?, ?, ?, ?, ?)";
+  private final String UPDATE_STATEMENT =
+      "UPDATE accounts SET first_name = ?, last_name = ?, department = ?,"
+          + " password = ?, salary = ?, emp_rank = ? WHERE id = ?";
+  private final String DELETE_STATEMENT = "DELETE FROM accounts where id = ?";
 
   private AccountDAO() {
   }
@@ -51,17 +59,14 @@ public class AccountDAO {
 
     try (Connection connection = getNewConnection()) {
 
-      String sqlInsert = "INSERT INTO employees (first_name, last_name, department,"
-          + " password, salary, emp_rank) VALUES (?, ?, ?, ?, ?, ?)";
-
-      PreparedStatement insertStatement = connection.prepareStatement(sqlInsert);
+      PreparedStatement insertStatement = connection.prepareStatement(INSERT_STATEMENT);
 
       insertStatement.setString(1, employee.getFirstName());
       insertStatement.setString(2, employee.getLastName());
       insertStatement.setString(3, employee.getDepartment().getDepartmentName());
       insertStatement.setString(4, employee.getPassword());
       insertStatement.setDouble(5, employee.getSalary());
-      insertStatement.setString(6, employee.getRank().getRankTitle());
+      insertStatement.setString(6, employee.getRank().toString());
 
       int rowsInserted = insertStatement.executeUpdate();
       if (rowsInserted > 0) {
@@ -79,8 +84,7 @@ public class AccountDAO {
 
     try (Connection connection = getNewConnection()) {
 
-      String sqlSelectOne = "SELECT * from employees where id = ?";
-      PreparedStatement selectOneStatement = connection.prepareStatement(sqlSelectOne);
+      PreparedStatement selectOneStatement = connection.prepareStatement(SELECT_STATEMENT);
 
       selectOneStatement.setInt(1, id);
 
@@ -101,10 +105,9 @@ public class AccountDAO {
   public List<Account> selectAllEmployees() {
     try (Connection connection = getNewConnection()) {
 
-      String sqlSelectAll = "SELECT * from employees";
       Statement statement = connection.createStatement();
 
-      ResultSet resultSet = statement.executeQuery(sqlSelectAll);
+      ResultSet resultSet = statement.executeQuery(SELECT_ALL_STATEMENT);
       List<Account> employeeList = new ArrayList<>();
       Account currentEmployee;
 
@@ -128,10 +131,7 @@ public class AccountDAO {
 
     try (Connection connection = getNewConnection()) {
 
-      String sqlUpdate = "UPDATE employees SET first_name = ?, last_name = ?, department = ?,"
-          + " password = ?, salary = ?, emp_rank = ? WHERE id = ?";
-
-      PreparedStatement updateStatement = connection.prepareStatement(sqlUpdate);
+      PreparedStatement updateStatement = connection.prepareStatement(UPDATE_STATEMENT);
 
       updateStatement.setString(1, employee.getFirstName());
       updateStatement.setString(2, employee.getLastName());
@@ -139,7 +139,7 @@ public class AccountDAO {
 
       updateStatement.setString(4, employee.getPassword());
       updateStatement.setDouble(5, employee.getSalary());
-      updateStatement.setString(6, employee.getRank().getRankTitle());
+      updateStatement.setString(6, employee.getRank().name());
 
       updateStatement.setInt(7, employee.getId());
 
@@ -158,8 +158,7 @@ public class AccountDAO {
   public Account deleteEmployee(int id) {
     try (Connection connection = getNewConnection()) {
 
-      String sqlDelete = "DELETE FROM employees where id = ?";
-      PreparedStatement deleteStatement = connection.prepareStatement(sqlDelete);
+      PreparedStatement deleteStatement = connection.prepareStatement(DELETE_STATEMENT);
 
       Account deletedEmployee = selectAccount(id);
       deleteStatement.setInt(1, id);

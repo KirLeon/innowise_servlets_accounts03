@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.innowise.servlets_task.dto.DTO;
 import com.innowise.servlets_task.service.AccountService;
+import com.innowise.servlets_task.service.LoginService;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
@@ -12,12 +13,14 @@ import javax.servlet.http.HttpServletResponse;
 public abstract class CommandClass implements Command {
 
   protected AccountService accountService;
+  protected LoginService loginService;
   private final String errorCode = "error code: 405";
-  private String errorMessage = "errorDescription: ";
+  private String errorMessage = "";
   public String defaultResponseCode = "response: ";
 
-  public CommandClass(AccountService accountService) {
+  public CommandClass(AccountService accountService, LoginService loginService) {
     this.accountService = accountService;
+    this.loginService = loginService;
   }
 
   @Override
@@ -72,7 +75,7 @@ public abstract class CommandClass implements Command {
       ObjectNode responseJson = objectMapper.createObjectNode();
 
       responseJson.put(responseKey, responseValue);
-      printWriter.write(responseJson.toString());
+      printWriter.write(responseJson + "\n");
 
     } catch (IOException e) {
       throw new RuntimeException(e);

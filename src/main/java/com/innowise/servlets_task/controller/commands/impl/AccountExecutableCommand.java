@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.innowise.servlets_task.controller.commands.CommandClass;
 import com.innowise.servlets_task.dto.AccountDTO;
 import com.innowise.servlets_task.service.AccountService;
+import com.innowise.servlets_task.service.LoginService;
 import java.io.BufferedReader;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
@@ -11,19 +12,27 @@ import javax.servlet.http.HttpServletResponse;
 
 public class AccountExecutableCommand extends CommandClass {
 
-  public AccountExecutableCommand(AccountService accountService) {
-    super(accountService);
+  public AccountExecutableCommand(AccountService accountService, LoginService loginService) {
+    super(accountService, loginService);
   }
 
   @Override
   public void executeGet(HttpServletRequest request, HttpServletResponse response) {
 
     AccountDTO accountDTO = parseFromJson(request);
+    int UAL = (int) request.getSession().getAttribute("UAL");
 
     int accountId = accountDTO.getId();
     accountDTO = accountService.getAccountByID(accountId);
     String responseText = accountDTO != null ? "The account is: " + accountDTO
         : "We cannot find the account with id: " + accountId;
+
+    if (UAL < 2 && accountDTO != null) {
+      accountDTO.setSalary(0);
+      accountDTO.setPassword("ACCESS LEVEL 3 REQUIRED");
+    } else if (UAL < 3 && accountDTO != null) {
+      accountDTO.setPassword("ACCESS LEVEL 3 REQUIRED");
+    }
 
     printResponseJSON(defaultResponseCode, responseText, response);
   }
@@ -39,6 +48,7 @@ public class AccountExecutableCommand extends CommandClass {
 
     printResponseJSON(defaultResponseCode, responseText, response);
   }
+
   @Override
   public void executeUpdate(HttpServletRequest request, HttpServletResponse response) {
 
@@ -50,11 +60,11 @@ public class AccountExecutableCommand extends CommandClass {
 
     printResponseJSON(defaultResponseCode, responseText, response);
   }
+
   @Override
   public void executeDelete(HttpServletRequest request, HttpServletResponse response) {
 
     AccountDTO accountDTO = parseFromJson(request);
-
     int accountId = accountDTO.getId();
     accountDTO = accountService.deleteAccount(accountId);
     String responseText = accountDTO != null ? "Account has been successfully deleted"
@@ -62,10 +72,11 @@ public class AccountExecutableCommand extends CommandClass {
 
     printResponseJSON(defaultResponseCode, responseText, response);
   }
+
   @Override
   public AccountDTO parseFromJson(HttpServletRequest request) {
 
-    AccountDTO accountDTO;
+    AccountDTO accountDTO = null;
 
     try (BufferedReader readerJSON = request.getReader()) {
 
@@ -77,11 +88,9 @@ public class AccountExecutableCommand extends CommandClass {
 
       ObjectMapper objectMapper = new ObjectMapper();
       accountDTO = objectMapper.readValue(bufferJSON.toString(), AccountDTO.class);
-    } catch (
-        IOException e) {
-      throw new RuntimeException(e);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
-
     return accountDTO;
   }
 

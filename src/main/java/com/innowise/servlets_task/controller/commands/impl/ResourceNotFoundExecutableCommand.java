@@ -3,7 +3,6 @@ package com.innowise.servlets_task.controller.commands.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.innowise.servlets_task.controller.commands.CommandClass;
-import com.innowise.servlets_task.service.AccountService;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +16,7 @@ public class ResourceNotFoundExecutableCommand extends CommandClass {
 
 
   public ResourceNotFoundExecutableCommand() {
-    super(null);
+    super(null, null);
   }
 
   @Override
@@ -62,7 +61,7 @@ public class ResourceNotFoundExecutableCommand extends CommandClass {
       printWriter.write(responseJson.toString());
 
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      e.printStackTrace();
     }
   }
 }
