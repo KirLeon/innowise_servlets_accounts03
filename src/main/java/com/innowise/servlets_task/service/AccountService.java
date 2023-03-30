@@ -104,32 +104,7 @@ public class AccountService {
 
   public boolean checkExistingUser(int id, String checkPassword) {
     AccountDTO userAccount = getAccountByID(id);
-    if (userAccount != null) {
-      String actualPassword = getAccountByID(id).getPassword();
-      if(BCrypt.checkpw(checkPassword, actualPassword))
-      return BCrypt.checkpw(checkPassword, actualPassword);
-    }
-    return false;
-  }
-
-//  public Account login(int id, String password) {
-//    Account account = accountDAO.selectAccount(id);
-//    if (account != null) {
-//      return checkUserPassword(id, password) ? account : null;
-//    }
-//    return null;
-//  }
-
-  public int checkUserRank(Object userId, Object password) {
-
-    if (userId == null || password == null ||
-        userId.toString().isEmpty() || password.toString().isEmpty()) {
-      return 0;
-    }
-
-    int id = Integer.parseInt(userId.toString());
-    AccountDTO userAccount = getAccountByID(id);
-    return checkExistingUser(id, password.toString()) ? userAccount.getRank().ordinal() + 1 : 0;
+    return userAccount != null && BCrypt.checkpw(checkPassword, getAccountByID(id).getPassword());
   }
 
 

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.innowise.servlets_task.dto.DTO;
 import com.innowise.servlets_task.service.AccountService;
 import com.innowise.servlets_task.service.LoginService;
-import com.mysql.cj.log.Log;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
@@ -76,7 +75,7 @@ public abstract class CommandClass implements Command {
       ObjectNode responseJson = objectMapper.createObjectNode();
 
       responseJson.put(responseKey, responseValue);
-      printWriter.write(responseJson.toString() + "\n");
+      printWriter.write(responseJson + "\n");
 
     } catch (IOException e) {
       throw new RuntimeException(e);

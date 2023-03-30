@@ -6,7 +6,6 @@ import com.innowise.servlets_task.controller.commands.impl.AccountExecutableComm
 import com.innowise.servlets_task.controller.commands.impl.AccountListExecutableCommand;
 import com.innowise.servlets_task.controller.commands.impl.LoginExecutableCommand;
 import com.innowise.servlets_task.controller.commands.impl.ResourceNotFoundExecutableCommand;
-import com.innowise.servlets_task.controller.commands.impl.SessionExecutableCommand;
 import com.innowise.servlets_task.service.AccountService;
 import com.innowise.servlets_task.service.LoginService;
 import java.util.HashMap;

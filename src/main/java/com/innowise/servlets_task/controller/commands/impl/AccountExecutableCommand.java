@@ -20,11 +20,19 @@ public class AccountExecutableCommand extends CommandClass {
   public void executeGet(HttpServletRequest request, HttpServletResponse response) {
 
     AccountDTO accountDTO = parseFromJson(request);
+    int UAL = (int) request.getSession().getAttribute("UAL");
 
     int accountId = accountDTO.getId();
     accountDTO = accountService.getAccountByID(accountId);
     String responseText = accountDTO != null ? "The account is: " + accountDTO
         : "We cannot find the account with id: " + accountId;
+
+    if (UAL < 2 && accountDTO != null) {
+      accountDTO.setSalary(0);
+      accountDTO.setPassword("ACCESS LEVEL 3 REQUIRED");
+    } else if (UAL < 3 && accountDTO != null) {
+      accountDTO.setPassword("ACCESS LEVEL 3 REQUIRED");
+    }
 
     printResponseJSON(defaultResponseCode, responseText, response);
   }
@@ -40,6 +48,7 @@ public class AccountExecutableCommand extends CommandClass {
 
     printResponseJSON(defaultResponseCode, responseText, response);
   }
+
   @Override
   public void executeUpdate(HttpServletRequest request, HttpServletResponse response) {
 
@@ -51,11 +60,11 @@ public class AccountExecutableCommand extends CommandClass {
 
     printResponseJSON(defaultResponseCode, responseText, response);
   }
+
   @Override
   public void executeDelete(HttpServletRequest request, HttpServletResponse response) {
 
     AccountDTO accountDTO = parseFromJson(request);
-
     int accountId = accountDTO.getId();
     accountDTO = accountService.deleteAccount(accountId);
     String responseText = accountDTO != null ? "Account has been successfully deleted"
@@ -63,6 +72,7 @@ public class AccountExecutableCommand extends CommandClass {
 
     printResponseJSON(defaultResponseCode, responseText, response);
   }
+
   @Override
   public AccountDTO parseFromJson(HttpServletRequest request) {
 

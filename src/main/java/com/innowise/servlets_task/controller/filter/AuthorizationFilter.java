@@ -7,8 +7,6 @@ import io.jsonwebtoken.JwtException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.FilterChain;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpFilter;
@@ -53,60 +51,22 @@ public class AuthorizationFilter extends HttpFilter {
       System.out.println("UAL" + userAccessLevel + "UID" + userId);
 
       String method = request.getMethod();
-      if(!method.equals("GET") && userAccessLevel < 1){
+      if (!method.equals("GET") && userAccessLevel < 1) {
+        response.setContentType("application/json");
+        response.setStatus(403);
+        PrintWriter out = response.getWriter();
+        out.println("You are not allowed to send this request");
+        return;
+      } else if ((method.equals("PUT") || method.equals("DELETE")) && userAccessLevel < 3) {
         response.setContentType("application/json");
         response.setStatus(403);
         PrintWriter out = response.getWriter();
         out.println("You are not allowed to send this request");
         return;
       }
-      else if((method.equals("PUT") || method.equals("DELETE")) && userAccessLevel < 3){
-        response.setContentType("application/json");
-        response.setStatus(403);
-        PrintWriter out = response.getWriter();
-        out.println("You are not allowed to send this request");
-        return;
-      }
+
+      request.getSession().setAttribute("UAL", userAccessLevel);
       filterChain.doFilter(request, response);
     }
   }
-
-//  protected void doFilter(HttpServletRequest request, HttpServletResponse response,
-//      FilterChain chain) throws IOException, ServletException {
-//
-//    String path = request.getContextPath();
-//    String httpHeaderAuthorization = request.getHeader("Authorization");
-//
-//    System.out.println("PATH " + path);
-//    System.out.println("PATH L" + path + "/login");
-//
-//    if (!(path.equals("/login") || httpHeaderAuthorization == null
-//        || !httpHeaderAuthorization.startsWith("Bearer "))) {
-//      String token = httpHeaderAuthorization.substring(7);
-//      JWTSecurityUtils jwtService = JWTSecurityUtils.getInstance();
-//      Jws<Claims> claims;
-//
-//      try {
-//        claims = jwtService.verifyUserToken(token);
-//      } catch (JwtException jwtException) {
-//        response.sendRedirect(request.getContextPath() + "/login");
-//        return;
-//      }
-//
-//      int userAccessLevel = claims.getBody().get("userAccessLevel", Integer.class);
-//      int userId = claims.getBody().get("userId", Integer.class);
-//
-//      System.out.println(
-//          "Filtered request for: " + path + "\n DATA: " + userId + "--------" + userAccessLevel);
-//      chain.doFilter(request, response);
-//    } else {
-//      ServletContext servletContext = getServletContext();
-//      String redirectPath = request.getContextPath() + "/login";
-//      RequestDispatcher requestDispatcher = servletContext.getRequestDispatcher(redirectPath);
-//
-//      System.out.println("REDIRECTING: " + redirectPath);
-//      requestDispatcher.forward(request, response);
-//      chain.doFilter(request, response);
-//    }
-//  }
 }

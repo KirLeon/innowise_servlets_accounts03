@@ -14,8 +14,8 @@ import java.util.Date;
 public class JWTSecurityUtils {
 
   private static JWTSecurityUtils securityInstance;
-  private final String SECRET = "7b230Hfm36Be4Nf78fb0ml83Nfi4";
-  private final long expTimeMillis = 1800000L;
+  private final String SECRET = "7b230Hfm36Be4Nf78fb0ml83Nfi4823hIUf764NFb8g93fgb318Gfjw0yf72";
+  private final long EXP_TIME_MILLIS = 1800000L;
 
   private JWTSecurityUtils() {
   }
@@ -45,7 +45,7 @@ public class JWTSecurityUtils {
         .claim("userId", userLogin.getUserId())
         .claim("userAccessLevel", userLogin.getRank().ordinal() + 1)
         .setIssuedAt(Date.from(Instant.ofEpochSecond(System.currentTimeMillis())))
-        .setExpiration(Date.from(Instant.ofEpochSecond(System.currentTimeMillis() + expTimeMillis)))
+        .setExpiration(Date.from(Instant.ofEpochSecond(System.currentTimeMillis() + EXP_TIME_MILLIS)))
         .signWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET)))
         .compact();
   }
