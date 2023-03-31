@@ -4,7 +4,6 @@ import com.innowise.servlets_task.entity.Account;
 import com.innowise.servlets_task.entity.Departments;
 import com.innowise.servlets_task.entity.Rank;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,6 +14,8 @@ import java.util.List;
 public class AccountDAO {
 
   private static volatile AccountDAO accountDAOInstance;
+
+  private ConnectionFactory connectionFactory;
   private final String SELECT_STATEMENT = "SELECT * from accounts where id = ?";
   private final String SELECT_ALL_STATEMENT = "SELECT * from accounts";
   private final String INSERT_STATEMENT = "INSERT INTO accounts (first_name, last_name, department,"
@@ -25,6 +26,7 @@ public class AccountDAO {
   private final String DELETE_STATEMENT = "DELETE FROM accounts where id = ?";
 
   private AccountDAO() {
+    this.connectionFactory = ConnectionFactory.getInstance();
   }
 
   public static AccountDAO getInstance() {
@@ -41,23 +43,23 @@ public class AccountDAO {
     return localInstance;
   }
 
-  public Connection getNewConnection() throws SQLException {
-
-    try {
-      Class.forName("com.mysql.jdbc.Driver");
-    } catch (ClassNotFoundException e) {
-      throw new RuntimeException(e);
-    }
-    String url = "jdbc:mysql://localhost/accounts";
-    String user = "account_admin";
-    String password = "946284";
-
-    return DriverManager.getConnection(url, user, password);
-  }
+//  public Connection getNewConnection() throws SQLException {
+//
+//    try {
+//      Class.forName("com.mysql.jdbc.Driver");
+//    } catch (ClassNotFoundException e) {
+//      throw new RuntimeException(e);
+//    }
+//    String url = "jdbc:mysql://localhost/accounts";
+//    String user = "account_admin";
+//    String password = "946284";
+//
+//    return DriverManager.getConnection(url, user, password);
+//  }
 
   public Account createNewAccount(Account employee) {
 
-    try (Connection connection = getNewConnection()) {
+    try (Connection connection = connectionFactory.getNewConnection()) {
 
       PreparedStatement insertStatement = connection.prepareStatement(INSERT_STATEMENT);
 
@@ -82,7 +84,7 @@ public class AccountDAO {
 
   public Account selectAccount(int id) {
 
-    try (Connection connection = getNewConnection()) {
+    try (Connection connection = connectionFactory.getNewConnection()) {
 
       PreparedStatement selectOneStatement = connection.prepareStatement(SELECT_STATEMENT);
 
@@ -103,7 +105,7 @@ public class AccountDAO {
   }
 
   public List<Account> selectAllEmployees() {
-    try (Connection connection = getNewConnection()) {
+    try (Connection connection = connectionFactory.getNewConnection()) {
 
       Statement statement = connection.createStatement();
 
@@ -129,7 +131,7 @@ public class AccountDAO {
 
   public Account updateAccount(Account employee) {
 
-    try (Connection connection = getNewConnection()) {
+    try (Connection connection = connectionFactory.getNewConnection()) {
 
       PreparedStatement updateStatement = connection.prepareStatement(UPDATE_STATEMENT);
 
@@ -156,7 +158,7 @@ public class AccountDAO {
   }
 
   public Account deleteEmployee(int id) {
-    try (Connection connection = getNewConnection()) {
+    try (Connection connection = connectionFactory.getNewConnection()) {
 
       PreparedStatement deleteStatement = connection.prepareStatement(DELETE_STATEMENT);
 
