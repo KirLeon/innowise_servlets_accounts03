@@ -1,4 +1,4 @@
-package com.innowise.servlets_task.controller.filter;
+package com.innowise.servlets_task.controller;
 
 import com.innowise.servlets_task.utils.JWTSecurityUtils;
 import io.jsonwebtoken.Claims;

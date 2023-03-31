@@ -1,4 +1,4 @@
-package com.innowise.servlets_task.controller.dispatcher;
+package com.innowise.servlets_task.controller;
 
 import com.innowise.servlets_task.controller.commands.Command;
 import com.innowise.servlets_task.controller.commands.CommandURLs;

@@ -15,6 +15,9 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <maven.compiler.source>1.8</maven.compiler.source>
     <junit.version>5.9.1</junit.version>
+<!--    <flyway.user>account_admin</flyway.user>-->
+<!--    <flyway.password>946284</flyway.password>-->
+<!--    <flyway.schemas>accounts</flyway.schemas>-->
   </properties>
 
   <dependencies>
@@ -82,23 +85,27 @@
       <artifactId>jjwt-api</artifactId>
       <version>0.11.5</version>
     </dependency>
-    <dependency>
-      <groupId>io.jsonwebtoken</groupId>
-      <artifactId>jjwt-api</artifactId>
-      <version>0.11.5</version>
-    </dependency>
+
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-impl</artifactId>
       <version>0.11.5</version>
       <scope>runtime</scope>
     </dependency>
+
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-jackson</artifactId>
       <version>0.11.5</version>
       <scope>runtime</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+      <version>9.16.1</version>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -140,6 +147,14 @@
 
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-maven-plugin</artifactId>
+        <version>9.16.0</version>
+      </plugin>
+
     </plugins>
   </build>
+
 </project>

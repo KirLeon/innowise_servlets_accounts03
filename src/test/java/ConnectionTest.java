@@ -8,23 +8,8 @@ import org.junit.jupiter.api.Test;
 public class ConnectionTest {
 
   @Test
-  public void testConnection() {
-    AccountDAO accountDAO = AccountDAO.getInstance();
-    Connection connection = null;
-    try {
-      connection = accountDAO.getNewConnection();
-      Assertions.assertTrue(connection.isValid(1));
-      Assertions.assertFalse(connection.isClosed());
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
-
-  }
-
-  @Test
   public void ConnectionFactoryTest() {
     ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
-    AccountDAO accountDAO = AccountDAO.getInstance();
 
     try {
       Connection connection = connectionFactory.getNewConnection();
